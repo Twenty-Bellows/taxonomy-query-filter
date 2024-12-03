@@ -1,0 +1,19 @@
+{
+	"core": "WordPress/WordPress",
+	"port": 8298,
+	"testsPort": 8299,
+	"plugins": [
+		"."
+	],
+	"themes": [
+	],
+        "mappings": {
+        },
+	"config": {
+		"WP_UPLOAD_MAX_FILESIZE": "128M",
+		"WP_MEMORY_LIMIT": "256M",
+		"WP_ENVIRONMENT_TYPE": "development",
+		"WP_DEVELOPMENT_MODE": "all"
+	}
+}
+

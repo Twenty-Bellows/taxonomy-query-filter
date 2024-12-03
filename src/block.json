@@ -1,0 +1,31 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "twentybellows/query-filter",
+	"attributes": {
+		"taxonomy": {
+			"type": "string",
+			"default": "category"
+		},
+		"queryId": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"usesContext": ["queryId", "query"],
+	"version": "0.1.0",
+	"title": "Query Filter",
+	"category": "theme",
+	"icon": "filter",
+	"description": "Add taxonomy filters for Query Loop",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "query-filter",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js"
+}

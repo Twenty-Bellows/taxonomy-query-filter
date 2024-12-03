@@ -1,0 +1,1 @@
+window.addEventListener("load",(function(){const o=sessionStorage.getItem("queryFilterScrollPosition");null!==o&&(window.scrollTo(0,parseInt(o,10)),sessionStorage.removeItem("queryFilterScrollPosition"))}));
