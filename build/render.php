@@ -17,26 +17,32 @@ $terms = get_terms(array(
 	'hide_empty' => true,
 ));
 
+// Get the base url so the front end can build a proper url for navigation
+$base_url = remove_query_arg($filter_slug,$current_url);
+$base_url = remove_query_arg('filter_query_id',$base_url);
+
 // if there is only one term dont' render anything
 if (count($terms) <= 1) {
 	return;
 }
 
 ?>
-<select <?php echo get_block_wrapper_attributes(); ?>onChange="sessionStorage.setItem('queryFilterScrollPosition', window.scrollY); window.document.location.href=this.options[this.selectedIndex].value;">
+<select 
+	data-wp-interactive="twentybellows/query-filter"
+	data-wp-on--change="actions.execute"
+	data-query-filter-slug="<?php echo $filter_slug ?>"
+	data-query-filter-id="<?php echo $query_id ?>"
+	data-query-filter-base-url="<?php echo $base_url ?>"
+	<?php echo get_block_wrapper_attributes(); ?>
+		
+		>
 	<?php
 
-	$url = remove_query_arg($filter_slug, $current_url);
-	$url = remove_query_arg('filter_query_id', $url);
-	echo '<option value="' . $url . '">' . $taxonomy->labels->all_items . '</option>';
+	echo '<option value="">' . $taxonomy->labels->all_items . '</option>';
 
 	foreach ($terms as $term) {
 		$selected = $term->slug === $selected_taxonomy_slug ? 'selected' : '';
-		//get the current URL
-		$url = remove_query_arg($filter_slug, $current_url);
-		$url = add_query_arg($filter_slug, $term->slug, $url);
-		$url = add_query_arg('filter_query_id', $query_id, $url);
-		echo '<option ' . $selected . ' value="' . $url . '">' . $term->name . '</option>';
+		echo '<option ' . $selected . ' value="' . $term->slug . '">' . $term->name . '</option>';
 	}
 	?>
 </select>
