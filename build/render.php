@@ -8,6 +8,7 @@ if (!array_key_exists('queryId', $block->context)) {
 $query_id = $block->context['queryId'];
 $current_url = add_query_arg( $_SERVER['QUERY_STRING'], '', home_url( $wp->request ) );
 $taxonomy_slug = $block->attributes['taxonomy'];
+$element = $block->attributes['element'];
 $filter_slug = 'filter_query_' . $taxonomy_slug;
 $labels = get_taxonomy($taxonomy_slug)->labels;
 $taxonomy = get_taxonomy($taxonomy_slug);
@@ -26,10 +27,13 @@ if (count($terms) <= 1) {
 	return;
 }
 
+if ($element == 'select') {
+
+
 ?>
 <select 
 	data-wp-interactive="twentybellows/query-filter"
-	data-wp-on--change="actions.execute"
+	data-wp-on--change="actions.executeSelect"
 	data-query-filter-slug="<?php echo $filter_slug ?>"
 	data-query-filter-id="<?php echo $query_id ?>"
 	data-query-filter-base-url="<?php echo $base_url ?>"
@@ -46,3 +50,41 @@ if (count($terms) <= 1) {
 	}
 	?>
 </select>
+
+<?php } elseif ($element == 'radio') { 
+	$field_id_base = "query-filter-" . $query_id . "-" . $filter_slug;
+	?>
+<div
+	data-wp-interactive="twentybellows/query-filter"
+	data-query-filter-slug="<?php echo $filter_slug ?>"
+	data-query-filter-id="<?php echo $query_id ?>"
+	data-query-filter-base-url="<?php echo $base_url ?>"
+	<?php echo get_block_wrapper_attributes(); ?>
+>
+	<label for="<?php echo $field_id_base ?>-all">
+		<input data-wp-on--change="actions.executeRadio" id="<?php echo $field_id_base ?>-all" name="<?php echo $field_id_base ?>" type="radio" value="" />
+		<?php echo $taxonomy->labels->all_items ?>
+	</label>
+
+	<?php
+		foreach ($terms as $term) {
+			$field_id = $field_id_base . "-" . $term->slug;
+			$checked = $term->slug === $selected_taxonomy_slug ? 'checked="checked"' : '';
+			?>
+			<label for="<?php echo $field_id ?>">
+				<input
+					data-wp-on--change="actions.executeRadio"
+					id="<?php echo $field_id ?>"
+					name="<?php echo $field_id_base ?>"
+					type="radio"
+					<?php echo $checked ?>
+					value="<?php echo $term->slug ?>" />
+				<?php echo $term->name ?>
+			</label>
+
+	<?php
+		}
+	?>
+	</div>
+
+<?php } ?>

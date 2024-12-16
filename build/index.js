@@ -121,6 +121,16 @@ __webpack_require__.r(__webpack_exports__);
    */
   edit: _edit__WEBPACK_IMPORTED_MODULE_2__["default"]
 });
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockVariation)("twentybellows/query-filter", {
+  name: 'query-filter-radio',
+  title: 'Query Filter - Radio',
+  description: 'Query filter using radio as the input',
+  isDefault: false,
+  attributes: {
+    element: 'radio'
+  },
+  isActive: (blockAttributes, variationAttributes) => blockAttributes.element === variationAttributes.element
+});
 
 /***/ }),
 
@@ -202,7 +212,7 @@ module.exports = window["wp"]["element"];
   \************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"twentybellows/query-filter","attributes":{"taxonomy":{"type":"string","default":"category"},"queryId":{"type":"string","default":""}},"usesContext":["queryId","query"],"version":"0.1.0","title":"Query Filter","category":"theme","icon":"filter","description":"Add taxonomy filters for Query Loop","example":{},"supports":{"html":false,"interactivity":{"clientNavigation":true}},"textdomain":"query-filter","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"twentybellows/query-filter","attributes":{"taxonomy":{"type":"string","default":"category"},"queryId":{"type":"string","default":""},"element":{"type":"string","default":"select"}},"usesContext":["queryId","query"],"version":"0.1.0","title":"Query Filter","category":"theme","icon":"filter","description":"Add taxonomy filters for Query Loop","example":{},"supports":{"html":false,"interactivity":{"clientNavigation":true}},"textdomain":"query-filter","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js"}');
 
 /***/ })
 

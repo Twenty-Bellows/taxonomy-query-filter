@@ -3,7 +3,7 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-import { registerBlockType } from '@wordpress/blocks';
+import { registerBlockType, registerBlockVariation } from '@wordpress/blocks';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -31,3 +31,14 @@ registerBlockType( metadata.name, {
 	 */
 	edit: Edit,
 } );
+
+registerBlockVariation("twentybellows/query-filter",{
+	name: 'query-filter-radio',
+	title: 'Query Filter - Radio',
+	description: 'Query filter using radio as the input',
+	isDefault: false,
+	attributes: {
+		element: 'radio'
+	},
+	isActive: (blockAttributes, variationAttributes) => blockAttributes.element === variationAttributes.element
+})

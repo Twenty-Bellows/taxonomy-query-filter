@@ -102,17 +102,54 @@ function buildURL(baseUrl, queryId, filterSlug) {
   return [base, queryId, filterSlug].filter(i => i) // weed out blanks
   .join('&');
 }
+
+/**
+ * Invokes the interactivity router and navigates the router region to the given URL
+ * @param {string} url 
+ */
+function* navigate(url) {
+  // store scroll position for later
+  sessionStorage.setItem('queryFilterScrollPosition', window.scrollY);
+
+  // navigate
+  const {
+    actions
+  } = yield Promise.resolve(/*! import() */).then(__webpack_require__.bind(__webpack_require__, /*! @wordpress/interactivity-router */ "@wordpress/interactivity-router"));
+  yield actions.navigate(url);
+  scrollWindow();
+}
+
+/**
+ * Given a reference to the root element of the query-filter block, returns the baseUrl, 
+ * queryId, and filterSlug to be used for URL building.
+ * @param {HTMLElement} ref - reference to the root HTML element of the query-filter block
+ * @returns {
+ *  {string} baseUrl
+ *  {string} queryId
+ *  {string} filterSlug
+ * }
+ */
+function getBaseAttributes(ref) {
+  const baseUrl = ref.getAttribute('data-query-filter-base-url');
+  const queryId = ref.getAttribute('data-query-filter-id');
+  const filterSlug = ref.getAttribute('data-query-filter-slug');
+  return {
+    baseUrl,
+    queryId,
+    filterSlug
+  };
+}
 (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.store)('twentybellows/query-filter', {
   actions: {
-    execute: function* (e) {
-      // store scroll position for later
-      sessionStorage.setItem('queryFilterScrollPosition', window.scrollY);
+    executeSelect: function* (e) {
       const {
         ref
       } = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getElement)();
-      const baseUrl = ref.getAttribute('data-query-filter-base-url');
-      const queryId = ref.getAttribute('data-query-filter-id');
-      const filterSlug = ref.getAttribute('data-query-filter-slug');
+      const {
+        baseUrl,
+        queryId,
+        filterSlug
+      } = getBaseAttributes(ref);
 
       // if a query variable is empty, don't include it in the URL
       const queryIdString = queryId ? `filter_query_id=${queryId}` : '';
@@ -121,16 +158,28 @@ function buildURL(baseUrl, queryId, filterSlug) {
 
       // store the selected value for after we navigate
       const selectedValue = ref.value;
-
-      // navigate
-      const {
-        actions
-      } = yield Promise.resolve(/*! import() */).then(__webpack_require__.bind(__webpack_require__, /*! @wordpress/interactivity-router */ "@wordpress/interactivity-router"));
-      yield actions.navigate(url);
+      yield* navigate(url);
 
       // reinstate selected element after navigation
       ref.value = selectedValue;
-      scrollWindow();
+    },
+    executeRadio: function* (e) {
+      const {
+        ref
+      } = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getElement)();
+      const containerRef = ref.parentElement?.parentElement;
+      const {
+        baseUrl,
+        queryId,
+        filterSlug
+      } = getBaseAttributes(containerRef);
+      const queryIdString = queryId ? `filter_query_id=${queryId}` : '';
+      const slugString = ref.value ? `${filterSlug}=${ref.value}` : '';
+      const url = buildURL(baseUrl, queryIdString, slugString);
+      yield* navigate(url);
+
+      // radio is easier than select
+      ref.checked = true;
     }
   }
 });
