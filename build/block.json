@@ -10,6 +10,10 @@
     "queryId": {
       "type": "string",
       "default": ""
+    },
+    "element": {
+      "type": "string",
+      "default": "select"
     }
   },
   "usesContext": [
@@ -23,12 +27,15 @@
   "description": "Add taxonomy filters for Query Loop",
   "example": {},
   "supports": {
-    "html": false
+    "html": false,
+    "interactivity": {
+      "clientNavigation": true
+    }
   },
   "textdomain": "query-filter",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "render": "file:./render.php",
-  "viewScript": "file:./view.js"
+  "viewScriptModule": "file:./view.js"
 }
