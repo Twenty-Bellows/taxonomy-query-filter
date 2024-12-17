@@ -33,7 +33,7 @@ if ($element == 'select') {
 ?>
 <select 
 	data-wp-interactive="twentybellows/query-filter"
-	data-wp-on--change="actions.executeSelect"
+	data-wp-on--change="actions.execute"
 	data-query-filter-slug="<?php echo $filter_slug ?>"
 	data-query-filter-id="<?php echo $query_id ?>"
 	data-query-filter-base-url="<?php echo $base_url ?>"
@@ -53,16 +53,21 @@ if ($element == 'select') {
 
 <?php } elseif ($element == 'radio') { 
 	$field_id_base = "query-filter-" . $query_id . "-" . $filter_slug;
+	$data_attributes = join(' ',array(
+		'data-wp-interactive="twentybellows/query-filter"',
+		'data-query-filter-slug="'. $filter_slug .'"',
+		'data-query-filter-id="' . $query_id .'"',
+		'data-query-filter-base-url="'. $base_url .'"',
+		'data-wp-on--change="actions.execute"'
+	))
 	?>
 <div
-	data-wp-interactive="twentybellows/query-filter"
-	data-query-filter-slug="<?php echo $filter_slug ?>"
-	data-query-filter-id="<?php echo $query_id ?>"
-	data-query-filter-base-url="<?php echo $base_url ?>"
 	<?php echo get_block_wrapper_attributes(); ?>
 >
 	<label for="<?php echo $field_id_base ?>-all">
-		<input data-wp-on--change="actions.executeRadio" id="<?php echo $field_id_base ?>-all" name="<?php echo $field_id_base ?>" type="radio" value="" />
+		<input
+			<?php echo $data_attributes ?>
+		  id="<?php echo $field_id_base ?>-all" name="<?php echo $field_id_base ?>" type="radio" value="" />
 		<?php echo $taxonomy->labels->all_items ?>
 	</label>
 
@@ -73,7 +78,7 @@ if ($element == 'select') {
 			?>
 			<label for="<?php echo $field_id ?>">
 				<input
-					data-wp-on--change="actions.executeRadio"
+					<?php echo $data_attributes ?>
 					id="<?php echo $field_id ?>"
 					name="<?php echo $field_id_base ?>"
 					type="radio"

@@ -68,10 +68,8 @@ function getBaseAttributes(ref) {
 
 store('twentybellows/query-filter', {
   actions: {
-    executeSelect: function* ( e ){
-
+    execute: function* ( _e ) {
       const { ref } = getElement();
-      
       const { baseUrl, queryId, filterSlug } = getBaseAttributes(ref);
 
       // if a query variable is empty, don't include it in the URL
@@ -79,32 +77,15 @@ store('twentybellows/query-filter', {
       const slugString = ref.value ? `${filterSlug}=${ref.value}` : '';
 
       const url = buildURL(baseUrl, queryIdString, slugString);
-
-      // store the selected value for after we navigate
       const selectedValue = ref.value;
-      
-      yield* navigate(url);
-
-      // reinstate selected element after navigation
-      ref.value = selectedValue;
-    },
-
-    executeRadio: function* ( e ){
-
-      const { ref } = getElement();
-      const containerRef = ref.parentElement?.parentElement;
-
-      const { baseUrl, queryId, filterSlug } = getBaseAttributes(containerRef);
-
-      const queryIdString = queryId ? `filter_query_id=${queryId}` : '';
-      const slugString = ref.value ? `${filterSlug}=${ref.value}` : '';
-
-      const url = buildURL(baseUrl, queryIdString, slugString);
 
       yield* navigate(url);
 
-      // radio is easier than select
-      ref.checked = true;
+      if (ref.tagName === 'SELECT') {
+        ref.value = selectedValue;
+      } else if (ref.tagName === 'INPUT' && ref.getAttribute('type') === 'radio'){
+        ref.checked = true
+      }
     }
   }
 })
