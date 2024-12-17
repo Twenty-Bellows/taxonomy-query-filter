@@ -5,6 +5,7 @@ global $wp;
 if (!array_key_exists('queryId', $block->context)) {
     return;
 }
+$enhancedPagination = $block->context['enhancedPagination'];
 $query_id = $block->context['queryId'];
 $current_url = add_query_arg( $_SERVER['QUERY_STRING'], '', home_url( $wp->request ) );
 $taxonomy_slug = $block->attributes['taxonomy'];
@@ -27,16 +28,21 @@ if (count($terms) <= 1) {
 	return;
 }
 
+$data_attributes = join(' ',array(
+	'data-wp-interactive="twentybellows/query-filter"',
+	'data-wp-on--change="actions.execute"',
+	'data-query-filter-slug="'. $filter_slug .'"',
+	'data-query-filter-id="' . $query_id .'"',
+	'data-query-filter-base-url="'. $base_url .'"',
+	'data-query-in-place="' . $enhancedPagination . '"'
+));
+
 if ($element == 'select') {
 
 
 ?>
 <select 
-	data-wp-interactive="twentybellows/query-filter"
-	data-wp-on--change="actions.execute"
-	data-query-filter-slug="<?php echo $filter_slug ?>"
-	data-query-filter-id="<?php echo $query_id ?>"
-	data-query-filter-base-url="<?php echo $base_url ?>"
+	<?php echo $data_attributes ?>
 	<?php echo get_block_wrapper_attributes(); ?>
 		
 		>
@@ -53,13 +59,6 @@ if ($element == 'select') {
 
 <?php } elseif ($element == 'radio') { 
 	$field_id_base = "query-filter-" . $query_id . "-" . $filter_slug;
-	$data_attributes = join(' ',array(
-		'data-wp-interactive="twentybellows/query-filter"',
-		'data-query-filter-slug="'. $filter_slug .'"',
-		'data-query-filter-id="' . $query_id .'"',
-		'data-query-filter-base-url="'. $base_url .'"',
-		'data-wp-on--change="actions.execute"'
-	))
 	?>
 <div
 	<?php echo get_block_wrapper_attributes(); ?>

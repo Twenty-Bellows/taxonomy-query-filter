@@ -18,7 +18,8 @@
   },
   "usesContext": [
     "queryId",
-    "query"
+    "query",
+    "enhancedPagination"
   ],
   "version": "0.1.0",
   "title": "Query Filter",
