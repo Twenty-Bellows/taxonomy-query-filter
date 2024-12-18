@@ -41,10 +41,10 @@ if ($element == 'select') {
 
 
 ?>
-<select 
+<select
 	<?php echo $data_attributes ?>
 	<?php echo get_block_wrapper_attributes(); ?>
-		
+
 		>
 	<?php
 
@@ -57,16 +57,17 @@ if ($element == 'select') {
 	?>
 </select>
 
-<?php } elseif ($element == 'radio') { 
+<?php } elseif ($element == 'radio') {
 	$field_id_base = "query-filter-" . $query_id . "-" . $filter_slug;
 	?>
 <div
 	<?php echo get_block_wrapper_attributes(); ?>
 >
+
+	<input
+		<?php echo $data_attributes ?>
+	  id="<?php echo $field_id_base ?>-all" name="<?php echo $field_id_base ?>" type="radio" value="" />
 	<label for="<?php echo $field_id_base ?>-all">
-		<input
-			<?php echo $data_attributes ?>
-		  id="<?php echo $field_id_base ?>-all" name="<?php echo $field_id_base ?>" type="radio" value="" />
 		<?php echo $taxonomy->labels->all_items ?>
 	</label>
 
@@ -75,14 +76,14 @@ if ($element == 'select') {
 			$field_id = $field_id_base . "-" . $term->slug;
 			$checked = $term->slug === $selected_taxonomy_slug ? 'checked="checked"' : '';
 			?>
+			<input
+				<?php echo $data_attributes ?>
+				id="<?php echo $field_id ?>"
+				name="<?php echo $field_id_base ?>"
+				type="radio"
+				<?php echo $checked ?>
+				value="<?php echo $term->slug ?>" />
 			<label for="<?php echo $field_id ?>">
-				<input
-					<?php echo $data_attributes ?>
-					id="<?php echo $field_id ?>"
-					name="<?php echo $field_id_base ?>"
-					type="radio"
-					<?php echo $checked ?>
-					value="<?php echo $term->slug ?>" />
 				<?php echo $term->name ?>
 			</label>
 
