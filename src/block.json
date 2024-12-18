@@ -16,7 +16,7 @@
 			"default": "select"
 		}
 	},
-	"usesContext": ["queryId", "query"],
+	"usesContext": ["queryId", "query","enhancedPagination"],
 	"version": "0.1.0",
 	"title": "Query Filter",
 	"category": "theme",

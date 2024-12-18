@@ -1,4 +1,4 @@
-import { store, getElement } from '@wordpress/interactivity'
+import { store, getElement, getContext } from '@wordpress/interactivity'
 
 /**
  * Scrolls the window to the position saved in session storage
@@ -38,13 +38,19 @@ function buildURL( baseUrl, queryId, filterSlug ) {
 /**
  * Invokes the interactivity router and navigates the router region to the given URL
  * @param {string} url 
+ * @param {string} inPlace - either 1 or empty string
  */
-function* navigate(url) {
+function* navigate(url, inPlace) {
   // store scroll position for later
   sessionStorage.setItem('queryFilterScrollPosition', window.scrollY);
 
-  // navigate
+  if (!inPlace) {
+    window.document.location.href=url;
+    return;
+  }
+
   const { actions } = yield import ('@wordpress/interactivity-router')
+  // navigate
   yield actions.navigate(url);
   scrollWindow();
 }
@@ -63,48 +69,30 @@ function getBaseAttributes(ref) {
   const baseUrl = ref.getAttribute('data-query-filter-base-url');
   const queryId = ref.getAttribute('data-query-filter-id');
   const filterSlug = ref.getAttribute('data-query-filter-slug');
-  return { baseUrl, queryId, filterSlug };
+  const inPlace = ref.getAttribute('data-query-in-place');
+  return { baseUrl, queryId, filterSlug, inPlace };
 }
 
 store('twentybellows/query-filter', {
   actions: {
-    executeSelect: function* ( e ){
-
+    execute: function* ( _e ) {
       const { ref } = getElement();
-      
-      const { baseUrl, queryId, filterSlug } = getBaseAttributes(ref);
+      const { baseUrl, queryId, filterSlug, inPlace } = getBaseAttributes(ref);
 
       // if a query variable is empty, don't include it in the URL
       const queryIdString = queryId ? `filter_query_id=${queryId}` : '';
       const slugString = ref.value ? `${filterSlug}=${ref.value}` : '';
 
       const url = buildURL(baseUrl, queryIdString, slugString);
-
-      // store the selected value for after we navigate
       const selectedValue = ref.value;
-      
-      yield* navigate(url);
 
-      // reinstate selected element after navigation
-      ref.value = selectedValue;
-    },
+      yield* navigate(url, inPlace);
 
-    executeRadio: function* ( e ){
-
-      const { ref } = getElement();
-      const containerRef = ref.parentElement?.parentElement;
-
-      const { baseUrl, queryId, filterSlug } = getBaseAttributes(containerRef);
-
-      const queryIdString = queryId ? `filter_query_id=${queryId}` : '';
-      const slugString = ref.value ? `${filterSlug}=${ref.value}` : '';
-
-      const url = buildURL(baseUrl, queryIdString, slugString);
-
-      yield* navigate(url);
-
-      // radio is easier than select
-      ref.checked = true;
+      if (ref.tagName === 'SELECT') {
+        ref.value = selectedValue;
+      } else if (ref.tagName === 'INPUT' && ref.getAttribute('type') === 'radio'){
+        ref.checked = true
+      }
     }
   }
 })
