@@ -19,6 +19,10 @@ $terms = get_terms(array(
 	'hide_empty' => true,
 ));
 
+if (is_wp_error($terms)) {
+	return;
+}
+
 // Get the base url so the front end can build a proper url for navigation
 $base_url = remove_query_arg($filter_slug,$current_url);
 $base_url = remove_query_arg('filter_query_id',$base_url);
