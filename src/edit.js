@@ -1,4 +1,4 @@
-import { InspectorControls } from '@wordpress/block-editor';
+import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { PanelBody, SelectControl } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
@@ -28,7 +28,7 @@ export default function Edit({ context, attributes, setAttributes }) {
 	};
 
 	return (
-		<>
+		<div { ...useBlockProps() }>
 			<SelectControl
 				value={taxonomy}
 				options={taxonomies}
@@ -44,7 +44,6 @@ export default function Edit({ context, attributes, setAttributes }) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-		</>
-
+		</div>
 	);
 }
