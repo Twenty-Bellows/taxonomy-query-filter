@@ -7,8 +7,9 @@
 	],
 	"themes": [
 	],
-        "mappings": {
-        },
+	"mappings": {
+		"db-seed.php": "./db-seed.php"
+	},
 	"config": {
 		"WP_UPLOAD_MAX_FILESIZE": "128M",
 		"WP_MEMORY_LIMIT": "256M",
@@ -17,4 +18,3 @@
 		"WP_AUTH_STORAGE": "storageState.json"
 	}
 }
-

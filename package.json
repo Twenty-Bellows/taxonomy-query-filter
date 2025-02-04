@@ -15,6 +15,7 @@
 		"dev": "wp-scripts start --webpack-copy-php --experimental-modules",
 		"start": "wp-env start --xdebug",
 		"stop": "wp-env stop",
+		"seed": "wp-env run cli php db-seed.php",
 		"clean": "wp-env clean all",
 		"clean:tests": "wp-env clean tests",
 		"test:e2e": "wp-scripts test-playwright",
