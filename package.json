@@ -28,7 +28,9 @@
 	"devDependencies": {
 		"@wordpress/e2e-test-utils-playwright": "^1.16.0",
 		"@wordpress/env": "^8.13.0",
-		"@wordpress/scripts": "^30.3.0"
+		"@wordpress/prettier-config": "^4.17.0",
+		"@wordpress/scripts": "^30.3.0",
+		"prettier": "npm:wp-prettier@^3.0.3"
 	},
 	"dependencies": {
 		"@wordpress/interactivity": "^6.14.0"

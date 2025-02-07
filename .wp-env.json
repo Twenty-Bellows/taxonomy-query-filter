@@ -2,11 +2,8 @@
 	"core": "WordPress/WordPress",
 	"port": 8298,
 	"testsPort": 8299,
-	"plugins": [
-		"."
-	],
-	"themes": [
-	],
+	"plugins": [ "." ],
+	"themes": [],
 	"mappings": {
 		"db-seed.php": "./db-seed.php"
 	},
