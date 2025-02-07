@@ -21,7 +21,9 @@
 		"test:e2e": "wp-scripts test-playwright",
 		"test:e2e:debug": "wp-scripts test-playwright --debug",
 		"test:e2e:ui": "wp-scripts test-playwright --ui",
-		"test:e2e:headed": "wp-scripts test-playwright --headed"
+		"test:e2e:headed": "wp-scripts test-playwright --headed",
+		"test:unit": "wp-scripts test-unit-js",
+		"test:unit:watch": "wp-scripts test-unit-js --watch"
 	},
 	"devDependencies": {
 		"@wordpress/e2e-test-utils-playwright": "^1.16.0",
