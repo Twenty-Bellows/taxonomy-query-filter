@@ -24,11 +24,15 @@ function scrollWindow() {
  * @return {string}
  */
 function buildURL( baseUrl, queryId, filterSlug ) {
-  let base = baseUrl;
-  // make sure we have a query string
-  if (base.indexOf('?') < 0) {
-    base = base + '?'
-  }
+	let base = baseUrl;
+
+	// strip out page number from URL
+	base = base.replace( /\??\&?query-\d+-page=\d+/, '' );
+
+	// make sure we have a query string
+	if ( base.indexOf( '?' ) < 0 ) {
+		base = base + '?';
+	}
 
   return [base, queryId, filterSlug]
     .filter(i => i) // weed out blanks

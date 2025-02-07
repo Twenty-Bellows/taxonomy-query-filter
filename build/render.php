@@ -48,7 +48,6 @@ if ($element == 'select') {
 <select
 	<?php echo $data_attributes ?>
 	<?php echo get_block_wrapper_attributes(); ?>
-
 		>
 	<?php
 
@@ -67,7 +66,6 @@ if ($element == 'select') {
 <div
 	<?php echo get_block_wrapper_attributes(); ?>
 >
-
 	<input
 		<?php echo $data_attributes ?>
 	  id="<?php echo $field_id_base ?>-all" name="<?php echo $field_id_base ?>" type="radio" value="" />
