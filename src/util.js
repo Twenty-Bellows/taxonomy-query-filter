@@ -1,4 +1,3 @@
-
 /**
  * Returns a full URL to send to the interactivity router for navigation
  * @param {string} baseUrl -The rest of the URL that isn't specific to this
@@ -18,9 +17,9 @@ function buildURL( baseUrl, queryId, filterSlug ) {
 		base = base + '?';
 	}
 
-  return [base, queryId, filterSlug]
-    .filter(i => i) // weed out blanks
-    .join('&');
+	return [ base, queryId, filterSlug ]
+		.filter( ( i ) => i ) // weed out blanks
+		.join( '&' );
 }
 
 /**
@@ -33,24 +32,21 @@ function buildURL( baseUrl, queryId, filterSlug ) {
  *  {string} filterSlug
  * }
  */
-function getBaseAttributes(ref) {
-  const baseUrl = ref.getAttribute('data-query-filter-base-url');
-  const queryId = ref.getAttribute('data-query-filter-id');
-  const filterSlug = ref.getAttribute('data-query-filter-slug');
-  const inPlace = ref.getAttribute('data-query-in-place');
-  return { baseUrl, queryId, filterSlug, inPlace };
+function getBaseAttributes( ref ) {
+	const baseUrl = ref.getAttribute( 'data-query-filter-base-url' );
+	const queryId = ref.getAttribute( 'data-query-filter-id' );
+	const filterSlug = ref.getAttribute( 'data-query-filter-slug' );
+	const inPlace = ref.getAttribute( 'data-query-in-place' );
+	return { baseUrl, queryId, filterSlug, inPlace };
 }
 
+export function getQueryUrl( ref ) {
+	const { baseUrl, queryId, filterSlug, inPlace } = getBaseAttributes( ref );
 
+	// if a query variable is empty, don't include it in the URL
+	const queryIdString = queryId ? `filter_query_id=${ queryId }` : '';
+	const slugString = ref.value ? `${ filterSlug }=${ ref.value }` : '';
 
-export function getQueryUrl(ref){
-
-      const { baseUrl, queryId, filterSlug, inPlace } = getBaseAttributes(ref);
-
-      // if a query variable is empty, don't include it in the URL
-      const queryIdString = queryId ? `filter_query_id=${queryId}` : '';
-      const slugString = ref.value ? `${filterSlug}=${ref.value}` : '';
-
-      const url = buildURL(baseUrl, queryIdString, slugString);
-			return url;
+	const url = buildURL( baseUrl, queryIdString, slugString );
+	return url;
 }
