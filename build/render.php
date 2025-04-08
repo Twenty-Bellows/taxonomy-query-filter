@@ -1,97 +1,143 @@
 <?php
-global $wp;
+/**
+ * Render the query filter block
+ *
+ * @package TwentyBellows
+ */
 
-// If the array key queryId is not set, return the pre_render
-if (!array_key_exists('queryId', $block->context)) {
-    return;
-}
-$enhancedPagination = $block->context['enhancedPagination'];
-$query_id = $block->context['queryId'];
-$current_url = add_query_arg( $_SERVER['QUERY_STRING'], '', home_url( $wp->request ) );
-$taxonomy_slug = $block->attributes['taxonomy'];
-$element = $block->attributes['element'];
-$filter_slug = 'filter_query_' . $taxonomy_slug;
-$labels = get_taxonomy($taxonomy_slug)->labels;
-$taxonomy = get_taxonomy($taxonomy_slug);
-$selected_taxonomy_slug = isset($_GET[$filter_slug]) ? sanitize_text_field($_GET[$filter_slug]) : '';
-$terms = get_terms(array(
-	'taxonomy' => $taxonomy_slug,
-	'hide_empty' => true,
-));
-
-if (is_wp_error($terms)) {
-	return;
-}
-
-// Get the base url so the front end can build a proper url for navigation
-$base_url = remove_query_arg($filter_slug,$current_url);
-$base_url = remove_query_arg('filter_query_id',$base_url);
-
-// if there is only one term dont' render anything
-if (count($terms) <= 1) {
-	return;
-}
-
-$data_attributes = join(' ',array(
-	'data-wp-interactive="twentybellows/query-filter"',
-	'data-wp-on--change="actions.execute"',
-	'data-query-filter-slug="'. $filter_slug .'"',
-	'data-query-filter-id="' . $query_id .'"',
-	'data-query-filter-base-url="'. $base_url .'"',
-	'data-query-in-place="' . $enhancedPagination . '"'
-));
-
-if ($element == 'select') {
-
-
-?>
-<select
-	<?php echo $data_attributes ?>
-	<?php echo get_block_wrapper_attributes(); ?>
-		>
-	<?php
-
-	echo '<option value="">' . $taxonomy->labels->all_items . '</option>';
-
-	foreach ($terms as $term) {
-		$selected = $term->slug === $selected_taxonomy_slug ? 'selected' : '';
-		echo '<option ' . $selected . ' value="' . $term->slug . '">' . $term->name . '</option>';
-	}
-	?>
-</select>
-
-<?php } elseif ($element == 'radio') {
-	$field_id_base = "query-filter-" . $query_id . "-" . $filter_slug;
-	?>
-<div
-	<?php echo get_block_wrapper_attributes(); ?>
->
-	<input
-		<?php echo $data_attributes ?>
-	  id="<?php echo $field_id_base ?>-all" name="<?php echo $field_id_base ?>" type="radio" value="" />
-	<label for="<?php echo $field_id_base ?>-all">
-		<?php echo $taxonomy->labels->all_items ?>
-	</label>
-
-	<?php
-		foreach ($terms as $term) {
-			$field_id = $field_id_base . "-" . $term->slug;
-			$checked = $term->slug === $selected_taxonomy_slug ? 'checked="checked"' : '';
-			?>
-			<input
-				<?php echo $data_attributes ?>
-				id="<?php echo $field_id ?>"
-				name="<?php echo $field_id_base ?>"
-				type="radio"
-				<?php echo $checked ?>
-				value="<?php echo $term->slug ?>" />
-			<label for="<?php echo $field_id ?>">
-				<?php echo $term->name ?>
-			</label>
-
-	<?php
+if (!class_exists('Twenty_Bellows_Query_Filter')) {
+	class Twenty_Bellows_Query_Filter
+	{
+		public function __construct()
+		{
 		}
-	?>
-	</div>
 
-<?php } ?>
+		public function render_content($block) {
+
+			$query_id = $block->context['queryId'];
+			$element = $block->attributes['element'];
+			$taxonomy_slug = $block->attributes['taxonomy'];
+			$enhanced_pagination    = $block->context['enhancedPagination'];
+			$taxonomy = get_taxonomy( $taxonomy_slug );
+			$terms = get_terms( array(
+				'taxonomy'   => $taxonomy->name,
+				'hide_empty' => true,
+			));
+
+			if (is_wp_error($terms)) {
+				return '';
+			}
+
+			$data_attributes = [
+				'data-wp-interactive' => 'twentybellows/query-filter',
+				'data-wp-on--change' => 'actions.filterByTerm',
+				'data-wp-init--query-filter' => 'callbacks.init',
+				'data-query-filter-taxonomy' => esc_attr($taxonomy_slug),
+				'data-query-filter-prefetch' => true,
+				'data-query-filter-query-id' => esc_attr($query_id),
+				'data-query-filter-enhanced-pagination' => $enhanced_pagination,
+			];
+
+
+			if ($element === 'radio') {
+				$content = self::get_query_filter_buttons($query_id, $taxonomy, $terms, $data_attributes);
+			}
+			else if ($element === 'select') {
+				$content = self::get_query_filter_select($query_id, $taxonomy, $terms, $data_attributes);
+			}
+
+			$block_wrapper_attributes = get_block_wrapper_attributes();
+			return sprintf(
+				'<div %1$s>%2$s</div>',
+				$block_wrapper_attributes,
+				$content,
+			);
+
+		}
+
+		private function get_query_filter_select($query_id, $taxonomy, $terms, $data_attributes) {
+
+			$options = '';
+
+			// All Items Option
+			$option = new WP_HTML_Tag_Processor('<option>' . $taxonomy->labels->all_items . '</option>');
+			$option->next_tag();
+			$option->set_attribute('value', 'all');
+			if (isset($_GET['query_filter_id']) && $_GET['query_filter_id'] == $query_id && isset($_GET['filter_slug']) && $_GET['filter_slug'] == 'all-companies') {
+				$option->set_attribute('selected', true);
+			}
+			$options .= $option->get_updated_html();
+
+			// Term Options
+			foreach ($terms as $term) {
+				$option = new WP_HTML_Tag_Processor('<option>' . $term->name . '</option>');
+				$option->next_tag();
+				$option->set_attribute('value', $term->slug);
+				if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy->name . '_' . $term->slug) {
+					$option->set_attribute('selected', true);
+				}
+				$options .= $option->get_updated_html();
+			}
+
+
+			$select = new WP_HTML_Tag_Processor('<select>'.$options.'</select>');
+			$select->next_tag();
+
+			// apply all of the data attributes
+			foreach ($data_attributes as $key => $value) {
+				$select->set_attribute($key, $value);
+			}
+
+			return $select->get_updated_html();
+
+		}
+
+		private function get_query_filter_buttons($query_id, $taxonomy, $terms, $data_attributes) {
+
+			$content = '';
+
+			$content .= self::get_query_filter_button($taxonomy->labels->all_items, 'all', $query_id, $data_attributes);
+
+			foreach ($terms as $term) {
+				$content .= self::get_query_filter_button($term->name, $term->slug, $query_id, $data_attributes);
+			}
+
+			return $content;
+		}
+
+		private function get_query_filter_button($name, $slug, $query_id, $data_attributes)
+		{
+
+			$item_id = "query-filter-$query_id-$slug";
+
+			$input = new WP_HTML_Tag_Processor('<input />');
+			$input->next_tag();
+			$input->set_attribute('id', $item_id);
+			$input->set_attribute('type', 'radio');
+			$input->set_attribute('name', 'filter_query_sector');
+			$input->set_attribute('value', $slug);
+
+			// apply all of the data attributes
+			foreach ($data_attributes as $key => $value) {
+				$input->set_attribute($key, $value);
+			}
+
+			if (isset($_GET['query_filter_id']) && $_GET['query_filter_id'] == $query_id && isset($_GET['filter_slug']) && $_GET['filter_slug'] == $slug) {
+				$input->set_attribute('checked', true);
+			}
+
+			$label = new WP_HTML_Tag_Processor('<label>' . $name . '</label>');
+			$label->next_tag();
+			$label->set_attribute('for', $item_id);
+
+			return $input->get_updated_html() . $label->get_updated_html();
+		}
+	}
+}
+
+if (!array_key_exists('queryId', $block->context)) {
+	return;
+}
+
+$query_filter = new Twenty_Bellows_Query_Filter();
+echo $query_filter->render_content($block);

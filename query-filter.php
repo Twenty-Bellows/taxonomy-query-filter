@@ -26,35 +26,41 @@ add_filter('pre_render_block', function ($pre_render, $parsed_block) {
 	if ('core/query' !== $parsed_block['blockName']) {
 		return $pre_render;
 	}
-	$filter_query_id = isset($_GET['filter_query_id']) ? sanitize_text_field($_GET['filter_query_id']) : '';
 
-	if (! $filter_query_id || intval($filter_query_id) !== $parsed_block['attrs']['queryId']) {
+	$query_id = $parsed_block['attrs']['queryId'];
+	$query_filters = array();
+
+	// loop through all attributes
+	foreach ( array_keys($_GET) as $key ) {
+		if (strpos($key, 'query-filter-' . $query_id) === 0) {
+			$query_filters[] = $_GET[$key];
+		}
+	}
+
+	if (empty($query_filters)) {
 		return $pre_render;
 	}
 
-	add_filter('query_loop_block_query_vars', function ($query) {
+	$query_filter = array_values($query_filters)[0];
 
-		// get all of the query variables that begin with 'filter_query_'
-		$filter_query_vars = array_filter(array_keys($_GET), function ($key) {
-			return strpos($key, 'filter_query_') === 0 && $key !== 'filter_query_id';
-		});
+	add_filter('query_loop_block_query_vars', function ($query) use ($query_filter) {
 
-		$tax_query = array();
+		$filter_query_vars = explode('_', $query_filter);
+		$taxonomy_slug = $filter_query_vars[0];
+		$term_slug = $filter_query_vars[1];
 
-		foreach ($filter_query_vars as $filter_query_var) {
-			$taxonomy_slug = str_replace('filter_query_', '', $filter_query_var);
-			$term_slug = isset($_GET[$filter_query_var]) ? sanitize_text_field($_GET[$filter_query_var]) : '';
-
-			if ($term_slug) {
-				$tax_query[] = array(
-					'taxonomy' => $taxonomy_slug,
-					'field'    => 'slug',
-					'terms'    => $term_slug,
-				);
-			}
+		if ( $term_slug === 'all' ) {
+			return $query;
 		}
 
+		$tax_query = array();
+		$tax_query[] = array(
+			'taxonomy' => $taxonomy_slug,
+			'field'    => 'slug',
+			'terms'    => $term_slug,
+		);
 		$query['tax_query'] = $tax_query;
+
 		return $query;
 	});
 
