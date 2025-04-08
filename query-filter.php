@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name:       Query Filter
- * Description:       Add taxonomy filters for Query Loop
+ * Description:       Add user controlled taxonomy filters for Query Loop
  * Requires at least: 6.6
  * Requires PHP:      7.2
  * Version:           1.0.0
@@ -30,10 +30,10 @@ add_filter('pre_render_block', function ($pre_render, $parsed_block) {
 	$query_id = $parsed_block['attrs']['queryId'];
 	$query_filters = array();
 
-	// loop through all attributes
 	foreach ( array_keys($_GET) as $key ) {
 		if (strpos($key, 'query-filter-' . $query_id) === 0) {
-			$query_filters[] = $_GET[$key];
+			// add a sanitized key
+			$query_filters[] = sanitize_text_field( wp_unslash ($_GET[$key]) );
 		}
 	}
 

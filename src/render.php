@@ -140,4 +140,4 @@ if (!array_key_exists('queryId', $block->context)) {
 }
 
 $query_filter = new Twenty_Bellows_Query_Filter();
-echo $query_filter->render_content($block);
+echo esc_html($query_filter->render_content($block));
