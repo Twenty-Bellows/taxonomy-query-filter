@@ -4,6 +4,7 @@ import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 
 export default function Edit( { context, attributes, setAttributes } ) {
+
 	const postType = context.query.postType;
 	const [ taxonomies, setTaxonomies ] = useState( [] );
 	const { taxonomy } = attributes;
@@ -31,6 +32,8 @@ export default function Edit( { context, attributes, setAttributes } ) {
 	return (
 		<div { ...useBlockProps() }>
 			<SelectControl
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
 				value={ taxonomy }
 				options={ taxonomies }
 				onChange={ ( taxonomy ) => handleTaxonomyChange( taxonomy ) }
@@ -38,6 +41,8 @@ export default function Edit( { context, attributes, setAttributes } ) {
 			<InspectorControls>
 				<PanelBody title={ 'Taxonomy to Filter' }>
 					<SelectControl
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
 						label="Select Taxonomy"
 						value={ taxonomy }
 						options={ taxonomies }
