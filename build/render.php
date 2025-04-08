@@ -63,7 +63,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			$option = new WP_HTML_Tag_Processor('<option>' . $taxonomy->labels->all_items . '</option>');
 			$option->next_tag();
 			$option->set_attribute('value', 'all');
-			if (isset($_GET['query_filter_id']) && $_GET['query_filter_id'] == $query_id && isset($_GET['filter_slug']) && $_GET['filter_slug'] == 'all-companies') {
+			if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy->name . '_all') {
 				$option->set_attribute('selected', true);
 			}
 			$options .= $option->get_updated_html();
@@ -96,16 +96,16 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 
 			$content = '';
 
-			$content .= self::get_query_filter_button($taxonomy->labels->all_items, 'all', $query_id, $data_attributes);
+			$content .= self::get_query_filter_button($taxonomy->labels->all_items, 'all', $taxonomy->slug, $query_id, $data_attributes);
 
 			foreach ($terms as $term) {
-				$content .= self::get_query_filter_button($term->name, $term->slug, $query_id, $data_attributes);
+				$content .= self::get_query_filter_button($term->name, $term->slug, $taxonomy->slug, $query_id, $data_attributes);
 			}
 
 			return $content;
 		}
 
-		private function get_query_filter_button($name, $slug, $query_id, $data_attributes)
+		private function get_query_filter_button($name, $slug, $taxonomy_slug, $query_id, $data_attributes)
 		{
 
 			$item_id = "query-filter-$query_id-$slug";
@@ -122,7 +122,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 				$input->set_attribute($key, $value);
 			}
 
-			if (isset($_GET['query_filter_id']) && $_GET['query_filter_id'] == $query_id && isset($_GET['filter_slug']) && $_GET['filter_slug'] == $slug) {
+			if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy_slug . '_' . $slug) {
 				$input->set_attribute('checked', true);
 			}
 
