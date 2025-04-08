@@ -1,7 +1,7 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "twentybellows/query-filter",
+	"name": "twentybellows/taxonomy-query-filter",
 	"attributes": {
 		"taxonomy": {
 			"type": "string",
@@ -18,7 +18,7 @@
 	},
 	"usesContext": [ "queryId", "query", "enhancedPagination" ],
 	"version": "0.1.0",
-	"title": "Query Filter",
+	"title": "Taxonomy Query Filter",
 	"category": "theme",
 	"icon": "filter",
 	"description": "Add taxonomy filters for Query Loop",
@@ -30,10 +30,8 @@
 			"clientNavigation": true
 		}
 	},
-	"textdomain": "query-filter",
+	"textdomain": "taxonomy-query-filter",
 	"editorScript": "file:./index.js",
-	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css",
 	"render": "file:./render.php",
 	"viewScriptModule": "file:./view.js"
 }

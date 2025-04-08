@@ -1,4 +1,4 @@
-# Query Filter
+# Taxonomy Query Filter
 
 A WordPress Block to filter query results.
 
@@ -22,7 +22,7 @@ NOTE: The environment run with xDebug enabled and VSCode launch configuration to
 ```html
 <!-- wp:query {"queryId":23,"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false,"taxQuery":{"category":[],"post_tag":[]},"parents":[],"format":[]}} -->
 	<div class="wp-blse ock-query">
-		<!-- wp:twentybellows/query-filter /-->
+		<!-- wp:twentybellows/taxonomy-query-filter /-->
 		<!-- wp:post-template -->
 		<!-- wp:post-title /-->
 		<!-- /wp:post-template -->

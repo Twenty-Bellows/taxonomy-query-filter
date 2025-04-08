@@ -29,7 +29,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			}
 
 			$data_attributes = [
-				'data-wp-interactive' => 'twentybellows/query-filter',
+				'data-wp-interactive' => 'twentybellows/taxonomy-query-filter',
 				'data-wp-on--change' => 'actions.filterByTerm',
 				'data-wp-init--query-filter' => 'callbacks.init',
 				'data-query-filter-taxonomy' => esc_attr($taxonomy_slug),
@@ -140,4 +140,4 @@ if (!array_key_exists('queryId', $block->context)) {
 }
 
 $query_filter = new Twenty_Bellows_Query_Filter();
-echo esc_html($query_filter->render_content($block));
+echo $query_filter->render_content($block);

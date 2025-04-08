@@ -7,19 +7,20 @@ function* navigate( url, enhancedPagination ) {
 		yield actions.navigate( url );
 	}
 	else {
+		//store the scroll position
 		sessionStorage.setItem( 'queryFilterScrollPosition', window.scrollY );
 		window.document.location.href = url;
 	}
 }
 
-const queryFilterStore = store( 'twentybellows/query-filter', {
+const queryFilterStore = store( 'twentybellows/taxonomy-query-filter', {
 	actions: {
-		filterByTerm: function* ( _e ) {
+		filterByTerm: function* () {
 
 			const { ref } = getElement();
 			const enhancedPagination = ref.hasAttribute('data-query-filter-enhanced-pagination');
 
-			yield* navigate(getQueryUrl( ref ), enhancedPagination);
+			yield* navigate( getQueryUrl( ref ), enhancedPagination );
 
 		},
 		prefetch: function* () {

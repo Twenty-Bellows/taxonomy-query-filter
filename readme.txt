@@ -1,4 +1,4 @@
-=== Query Filter ===
+=== Taxonomy Query Filter ===
 Contributors:      pbking stevep
 Tags:              block
 Tested up to:      6.7

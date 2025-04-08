@@ -1,5 +1,4 @@
 import { registerBlockType, registerBlockVariation } from '@wordpress/blocks';
-import './style.scss';
 
 /**
  * Internal dependencies
@@ -11,9 +10,9 @@ registerBlockType( metadata.name, {
 	edit: Edit,
 } );
 
-registerBlockVariation( 'twentybellows/query-filter', {
-	name: 'query-filter-radio',
-	title: 'Query Filter - Radio',
+registerBlockVariation( 'twentybellows/taxonomy-query-filter', {
+	name: 'taxonomy-query-filter-radio',
+	title: 'Taxonomy Query Filter - Radio',
 	description: 'Query filter using radio as the input',
 	isDefault: false,
 	attributes: {
