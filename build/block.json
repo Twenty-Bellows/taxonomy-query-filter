@@ -27,6 +27,9 @@
   "icon": "filter",
   "description": "Add taxonomy filters for Query Loop",
   "example": {},
+  "parent": [
+    "core/query"
+  ],
   "supports": {
     "html": false,
     "interactivity": {
