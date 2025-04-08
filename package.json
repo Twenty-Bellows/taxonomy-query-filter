@@ -2,7 +2,7 @@
 	"name": "query-filter",
 	"version": "0.1.0",
 	"description": "Add taxonomy filters for Query Loop",
-	"author": "The WordPress Contributors",
+	"author": "pbking",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {

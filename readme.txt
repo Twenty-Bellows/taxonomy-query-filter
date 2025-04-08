@@ -1,5 +1,5 @@
 === Query Filter ===
-Contributors:      pbking
+Contributors:      pbking stevep
 Tags:              block
 Tested up to:      6.7
 Stable tag:        1.0.0
