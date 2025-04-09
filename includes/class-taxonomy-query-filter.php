@@ -32,7 +32,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			$data_attributes = [
 				'data-wp-interactive' => 'twentybellows/taxonomy-query-filter',
 				'data-wp-on--change' => 'actions.filterByTerm',
-				'data-wp-init--query-filter' => 'callbacks.init',
+				'data-wp-init--taxonomy-query-filter' => 'callbacks.init',
 				'data-query-filter-taxonomy' => esc_attr($taxonomy_slug),
 				'data-query-filter-prefetch' => true,
 				'data-query-filter-query-id' => esc_attr($query_id),
@@ -124,6 +124,10 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			}
 
 			if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy_slug . '_' . $slug) {
+				$input->set_attribute('checked', true);
+			}
+
+			if ( ! isset($_GET['query-filter-' . $query_id]) && $slug === 'all') {
 				$input->set_attribute('checked', true);
 			}
 

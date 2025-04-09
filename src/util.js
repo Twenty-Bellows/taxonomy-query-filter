@@ -1,7 +1,7 @@
-export function getQueryUrl( ref ) {
+export function getQueryUrl( ref, value = null ) {
 
 	const queryId = ref.getAttribute( 'data-query-filter-query-id' ) || '';
-	const term = ref.value;
+	const term = value || ref.value;
 	const taxonomy = ref.getAttribute( 'data-query-filter-taxonomy' ) || '';
 	const currentUrl = new URL(window.location.href);
 

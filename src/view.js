@@ -20,13 +20,19 @@ const queryFilterStore = store( 'twentybellows/taxonomy-query-filter', {
 			const { ref } = getElement();
 			const enhancedPagination = ref.hasAttribute('data-query-filter-enhanced-pagination');
 
+      			const selectedValue = ref.value;
+
 			yield* navigate( getQueryUrl( ref ), enhancedPagination );
 
+			if ( enhancedPagination) {
+        			ref.value = selectedValue;
+        			ref.checked = true;
+			}
+
 		},
-		prefetch: function* () {
+		prefetch: function* ( url ) {
 			const { actions } = yield import('@wordpress/interactivity-router')
-			const { ref } = getElement();
-			actions.prefetch( getQueryUrl( ref ));
+			actions.prefetch( url );
 		},
 	},
 	callbacks: {
@@ -35,7 +41,15 @@ const queryFilterStore = store( 'twentybellows/taxonomy-query-filter', {
 			const prefetch = ref.hasAttribute('data-query-filter-prefetch');
 
 			if ( prefetch ) {
-				queryFilterStore.actions.prefetch();
+				if ( ref.options ) {
+					for ( const option of ref.options ) {
+						queryFilterStore.actions.prefetch( getQueryUrl( ref, option.value ) );
+
+					}
+				}
+				else {
+					queryFilterStore.actions.prefetch( getQueryUrl( ref ) );
+				}
 			}
 		}
 	}
