@@ -5,7 +5,13 @@ export function getQueryUrl( ref ) {
 	const taxonomy = ref.getAttribute( 'data-query-filter-taxonomy' ) || '';
 	const currentUrl = new URL(window.location.href);
 
-	currentUrl.searchParams.set('query-filter-' + queryId, taxonomy + '_' + term);
+	if (term === 'all' ) {
+		currentUrl.searchParams.delete('query-filter-' + queryId);
+	}
+	else {
+		currentUrl.searchParams.set('query-filter-' + queryId, taxonomy + '_' + term);
+	}
+
 	currentUrl.searchParams.delete('query-' + queryId + '-page');
 
 	return currentUrl.href;
