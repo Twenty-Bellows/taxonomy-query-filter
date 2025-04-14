@@ -4,7 +4,6 @@ import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 
 export default function Edit( { context, attributes, setAttributes } ) {
-
 	const postType = context.query.postType;
 	const [ taxonomies, setTaxonomies ] = useState( [] );
 	const { taxonomy } = attributes;

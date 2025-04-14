@@ -5,8 +5,7 @@ function* navigate( url, enhancedPagination ) {
 	if ( enhancedPagination ) {
 		const { actions } = yield import( '@wordpress/interactivity-router' );
 		yield actions.navigate( url );
-	}
-	else {
+	} else {
 		//store the scroll position
 		sessionStorage.setItem( 'queryFilterScrollPosition', window.scrollY );
 		window.document.location.href = url;
@@ -16,43 +15,45 @@ function* navigate( url, enhancedPagination ) {
 const queryFilterStore = store( 'twentybellows/taxonomy-query-filter', {
 	actions: {
 		filterByTerm: function* () {
-
 			const { ref } = getElement();
-			const enhancedPagination = ref.hasAttribute('data-query-filter-enhanced-pagination');
+			const enhancedPagination = ref.hasAttribute(
+				'data-query-filter-enhanced-pagination'
+			);
 
-      			const selectedValue = ref.value;
+			const selectedValue = ref.value;
 
 			yield* navigate( getQueryUrl( ref ), enhancedPagination );
 
-			if ( enhancedPagination) {
-        			ref.value = selectedValue;
-        			ref.checked = true;
+			if ( enhancedPagination ) {
+				ref.value = selectedValue;
+				ref.checked = true;
 			}
-
 		},
 		prefetch: function* ( url ) {
-			const { actions } = yield import('@wordpress/interactivity-router')
+			const { actions } = yield import(
+				'@wordpress/interactivity-router'
+			);
 			actions.prefetch( url );
 		},
 	},
 	callbacks: {
-		init: function() {
+		init: function () {
 			const { ref } = getElement();
-			const prefetch = ref.hasAttribute('data-query-filter-prefetch');
+			const prefetch = ref.hasAttribute( 'data-query-filter-prefetch' );
 
 			if ( prefetch ) {
 				if ( ref.options ) {
 					for ( const option of ref.options ) {
-						queryFilterStore.actions.prefetch( getQueryUrl( ref, option.value ) );
-
+						queryFilterStore.actions.prefetch(
+							getQueryUrl( ref, option.value )
+						);
 					}
-				}
-				else {
+				} else {
 					queryFilterStore.actions.prefetch( getQueryUrl( ref ) );
 				}
 			}
-		}
-	}
+		},
+	},
 } );
 
 // If we aren't using enhanced pagination, scroll to the last scroll position
