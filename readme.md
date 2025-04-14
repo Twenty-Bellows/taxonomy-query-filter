@@ -30,7 +30,7 @@ NOTE: The environment run with xDebug enabled and VSCode launch configuration to
 <!-- /wp:query -->
 ```
 
-### Plugin Test
+### Plugin Test & Evaluation
 
 In order to test the released assets in a quick environment with the Plugin Checker plugin you can do the following:
 
