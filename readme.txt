@@ -1,5 +1,5 @@
 === Taxonomy Query Filter ===
-Contributors:      pbking stevep
+Contributors:      pbking stevep thezenith
 Tags:              block
 Tested up to:      6.7
 Stable tag:        1.0.0
