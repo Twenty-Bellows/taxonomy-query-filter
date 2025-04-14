@@ -11,16 +11,17 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 	{
 		public function __construct()
 		{
+			add_filter('pre_render_block', array($this, 'pre_render_query_block'), 0, 2);
 		}
 
-		public function render_content($block) {
-
+		public function render_content($block)
+		{
 			$query_id = $block->context['queryId'];
 			$element = $block->attributes['element'];
 			$taxonomy_slug = $block->attributes['taxonomy'];
 			$enhanced_pagination    = $block->context['enhancedPagination'];
-			$taxonomy = get_taxonomy( $taxonomy_slug );
-			$terms = get_terms( array(
+			$taxonomy = get_taxonomy($taxonomy_slug);
+			$terms = get_terms(array(
 				'taxonomy'   => $taxonomy->name,
 				'hide_empty' => true,
 			));
@@ -42,8 +43,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 
 			if ($element === 'radio') {
 				$content = self::get_query_filter_buttons($query_id, $taxonomy, $terms, $data_attributes);
-			}
-			else if ($element === 'select') {
+			} else if ($element === 'select') {
 				$content = self::get_query_filter_select($query_id, $taxonomy, $terms, $data_attributes);
 			}
 
@@ -53,11 +53,10 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 				$block_wrapper_attributes,
 				$content,
 			);
-
 		}
 
-		private function get_query_filter_select($query_id, $taxonomy, $terms, $data_attributes) {
-
+		private function get_query_filter_select($query_id, $taxonomy, $terms, $data_attributes)
+		{
 			$options = '';
 
 			// All Items Option
@@ -83,7 +82,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			}
 
 
-			$select = new WP_HTML_Tag_Processor('<select>'.$options.'</select>');
+			$select = new WP_HTML_Tag_Processor('<select>' . $options . '</select>');
 			$select->next_tag();
 
 			// apply all of the data attributes
@@ -92,14 +91,11 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			}
 
 			return $select->get_updated_html();
-
 		}
 
-		private function get_query_filter_buttons($query_id, $taxonomy, $terms, $data_attributes) {
-
-			$content = '';
-
-			$content .= self::get_query_filter_button($taxonomy->labels->all_items, 'all', $taxonomy->name, $query_id, $data_attributes);
+		private function get_query_filter_buttons($query_id, $taxonomy, $terms, $data_attributes)
+		{
+			$content = self::get_query_filter_button($taxonomy->labels->all_items, 'all', $taxonomy->name, $query_id, $data_attributes);
 
 			foreach ($terms as $term) {
 				$content .= self::get_query_filter_button($term->name, $term->slug, $taxonomy->name, $query_id, $data_attributes);
@@ -110,7 +106,6 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 
 		private function get_query_filter_button($name, $slug, $taxonomy_slug, $query_id, $data_attributes)
 		{
-
 			$item_id = "query-filter-$query_id-$slug";
 
 			$input = new WP_HTML_Tag_Processor('<input />');
@@ -131,7 +126,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			}
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( ! isset($_GET['query-filter-' . $query_id]) && $slug === 'all') {
+			if (! isset($_GET['query-filter-' . $query_id]) && $slug === 'all') {
 				$input->set_attribute('checked', true);
 			}
 
@@ -142,5 +137,60 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			return $input->get_updated_html() . $label->get_updated_html();
 		}
 
+		public static function pre_render_query_block($pre_render, $parsed_block)
+		{
+			if ('core/query' !== $parsed_block['blockName']) {
+				return $pre_render;
+			}
+
+			if (!isset($parsed_block['attrs']['queryId'])) {
+				return $pre_render;
+			}
+
+			$query_id = $parsed_block['attrs']['queryId'];
+			$query_filters = array();
+
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			foreach (array_keys($_GET) as $key) {
+				if (strpos($key, 'query-filter-' . $query_id) === 0) {
+					// add a sanitized key
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					if (isset($_GET[$key])) {
+						// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+						$query_filters[] = sanitize_text_field(wp_unslash($_GET[$key]));
+					}
+				}
+			}
+
+			if (empty($query_filters)) {
+				return $pre_render;
+			}
+
+			$query_filter = array_values($query_filters)[0];
+
+
+			add_filter('query_loop_block_query_vars', function ($query) use ($query_filter) {
+
+				$filter_query_vars = explode('_', $query_filter);
+				$taxonomy_slug = $filter_query_vars[0];
+				$term_slug = $filter_query_vars[1];
+
+				if ($term_slug === 'all') {
+					return $query;
+				}
+
+				$tax_query = array();
+				$tax_query[] = array(
+					'taxonomy' => $taxonomy_slug,
+					'field'    => 'slug',
+					'terms'    => $term_slug,
+				);
+				$query['tax_query'] = $tax_query;
+
+				return $query;
+			});
+
+			return $pre_render;
+		}
 	}
 }
