@@ -29,3 +29,20 @@ NOTE: The environment run with xDebug enabled and VSCode launch configuration to
 	</div>
 <!-- /wp:query -->
 ```
+
+### Plugin Test
+
+In order to test the released assets in a quick environment with the Plugin Checker plugin you can do the following:
+
+```bash
+npm install
+npm run build
+npm run plugin-zip
+npm run plugin-test
+```
+
+A `wp-now` environment will quickly spin up and open and you can test the plugin. Note that for this environment Docker is not needed. (Node is the only requirement.)
+
+`build` created assets in /build
+`plugin-zip` will package the necessary assets into `taxonomy-query-filter.zip`
+`plugin-test` will extract the contents of that file into `/release/taxonomy-query-filter/` and run a playground instance from that folder.
