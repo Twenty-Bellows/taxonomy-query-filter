@@ -6,8 +6,8 @@
  * Requires at least: 6.6
  * Requires PHP:      7.2
  * Version:           1.0.0
- * Author:            pbking
- * Author URI:        https://pbking.com
+ * Author:            Twenty Bellows
+ * Author URI:        https://twentybellows.com
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       taxonomy-query-filter
@@ -34,10 +34,15 @@ add_filter('pre_render_block', function ($pre_render, $parsed_block) {
 	$query_id = $parsed_block['attrs']['queryId'];
 	$query_filters = array();
 
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	foreach ( array_keys($_GET) as $key ) {
 		if (strpos($key, 'query-filter-' . $query_id) === 0) {
 			// add a sanitized key
-			$query_filters[] = sanitize_text_field( wp_unslash ($_GET[$key]) );
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( isset($_GET[$key]) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$query_filters[] = sanitize_text_field( wp_unslash ($_GET[$key]) );
+			}
 		}
 	}
 

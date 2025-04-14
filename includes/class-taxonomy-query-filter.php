@@ -64,6 +64,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			$option = new WP_HTML_Tag_Processor('<option>' . $taxonomy->labels->all_items . '</option>');
 			$option->next_tag();
 			$option->set_attribute('value', 'all');
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy->name . '_all') {
 				$option->set_attribute('selected', true);
 			}
@@ -74,6 +75,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 				$option = new WP_HTML_Tag_Processor('<option>' . $term->name . '</option>');
 				$option->next_tag();
 				$option->set_attribute('value', $term->slug);
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy->name . '_' . $term->slug) {
 					$option->set_attribute('selected', true);
 				}
@@ -123,10 +125,12 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 				$input->set_attribute($key, $value);
 			}
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy_slug . '_' . $slug) {
 				$input->set_attribute('checked', true);
 			}
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ! isset($_GET['query-filter-' . $query_id]) && $slug === 'all') {
 				$input->set_attribute('checked', true);
 			}

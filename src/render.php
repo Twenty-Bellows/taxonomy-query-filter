@@ -11,4 +11,4 @@ if (!array_key_exists('queryId', $block->context)) {
 
 require_once plugin_dir_path( __DIR__ ) . 'includes/class-taxonomy-query-filter.php';
 $query_filter = new Twenty_Bellows_Query_Filter();
-echo $query_filter->render_content($block);
+echo $query_filter->render_content($block); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
