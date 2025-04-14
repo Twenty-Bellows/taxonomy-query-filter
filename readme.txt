@@ -10,17 +10,31 @@ Add taxonomy filters for Query Loop
 
 == Description ==
 
-Adds user-facing Taxonomy Select element for a given Query Loop for filtering
+This plugin adds a block you can use inside a Query Loop block that allows visitors to filter the posts by taxonomy terms (like Category or Tag).
+
+Useful for creating interactive post listings and archives.
 
 == Installation ==
 
+1. Upload the plugin files to the `/wp-content/plugins/taxonomy-query-filter` directory, or install it via the WordPress Plugin Directory.
+2. Activate the plugin through the 'Plugins' screen in WordPress.
+3. Insert the **Taxonomy Query Filter** block inside a **Query Loop** block on any page or post.
+
 == Frequently Asked Questions ==
+
+= How do I use the filter? =
+
+1. Insert a Query Loop block.
+2. Insert the **Taxonomy Query Filter** block *inside* the Query Loop.
+3. Choose the taxonomy you want to filter by (Category, Tag, or a custom taxonomy).
+
+= Can I style the dropdown? =
+
+Yes! The block outputs standard markup and class names you can target with CSS.
 
 == Screenshots ==
 
 == Changelog ==
 
 = 1.0.0 =
-* Release
-
-== Arbitrary section ==
+* Initial release with category filtering support.
