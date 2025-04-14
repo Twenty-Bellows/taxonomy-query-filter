@@ -48,16 +48,14 @@ wp_insert_post([
 ]);
 
 // Create page with block markup
-$page_markup = <<<MARKUP
-<!-- wp:query {"queryId":23,"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false,"taxQuery":{"category":[],"post_tag":[]},"parents":[],"format":[],"enhancedPagination":true},"enhancedPagination":true} -->
+$page_markup = '<!-- wp:query {"queryId":23,"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false,"taxQuery":{"category":[],"post_tag":[]},"parents":[],"format":[],"enhancedPagination":true},"enhancedPagination":true} -->
 <div class="wp-block-query">
   <!-- wp:twentybellows/taxonomy-query-filter /-->
   <!-- wp:post-template -->
   <!-- wp:post-title {"isLink":true} /-->
   <!-- /wp:post-template -->
 </div>
-<!-- /wp:query -->
-MARKUP;
+<!-- /wp:query -->';
 
 wp_insert_post([
 	'post_title' => 'Query Filter Page',
