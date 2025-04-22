@@ -5,6 +5,8 @@
  * @package TwentyBellows
  */
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 if (!array_key_exists('queryId', $block->context)) {
 	return;
 }
