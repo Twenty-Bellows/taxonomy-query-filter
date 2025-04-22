@@ -1,5 +1,5 @@
 === Taxonomy Query Filter ===
-Contributors:      pbking, stevep, thezenith
+Contributors:      twentybellows, pbking, stevepfisterer, thezenith
 Tags:              block
 Tested up to:      6.7
 Stable tag:        1.0.0
@@ -20,12 +20,25 @@ Useful for creating interactive post listings and archives.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 3. Insert the **Taxonomy Query Filter** block inside a **Query Loop** block on any page or post.
 
+== Development ==
+
+The plugin source is available here: https://github.com/Twenty-Bellows/taxonomy-query-filter
+
+Node & NPM are needed to install and run the development tools:
+
+```
+npm install
+npm run build
+```
+
+See the source for more details.
+
 == Frequently Asked Questions ==
 
 = How do I use the filter? =
 
 1. Insert a Query Loop block.
-2. Insert the **Taxonomy Query Filter** block *inside* the Query Loop.
+2. Insert the **Taxonomy Query Filter** block *inside* the Query Loop block.
 3. Choose the taxonomy you want to filter by (Category, Tag, or a custom taxonomy).
 
 = Can I style the dropdown? =

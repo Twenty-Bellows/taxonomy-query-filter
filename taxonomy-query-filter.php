@@ -2,6 +2,7 @@
 
 /**
  * Plugin Name:       Taxonomy Query Filter
+ * Plugin URI: 	      https://github.com/Twenty-Bellows/taxonomy-query-filter
  * Description:       Add user controlled taxonomy filters for Query Loop
  * Requires at least: 6.6
  * Requires PHP:      7.2
