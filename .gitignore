@@ -27,6 +27,7 @@ vendor/
 # Output of `wp-scripts plugin-zip`
 *.zip
 release/
+svn/
 
 # dotenv environment variables file
 .env
