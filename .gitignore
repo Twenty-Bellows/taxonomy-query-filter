@@ -34,3 +34,4 @@ svn/
 
 # Test Artifacts
 artifacts/
+.DS_Store
