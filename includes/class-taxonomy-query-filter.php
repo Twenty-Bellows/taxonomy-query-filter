@@ -75,7 +75,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 				$option->next_tag();
 				$option->set_attribute('value', $term->slug);
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy->name . '_' . $term->slug) {
+				if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy->name . '.' . $term->slug) {
 					$option->set_attribute('selected', true);
 				}
 				$options .= $option->get_updated_html();
@@ -121,7 +121,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			}
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy_slug . '_' . $slug) {
+			if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy_slug . '.' . $slug) {
 				$input->set_attribute('checked', true);
 			}
 
@@ -171,7 +171,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 
 			add_filter('query_loop_block_query_vars', function ($query) use ($query_filter) {
 
-				$filter_query_vars = explode('_', $query_filter);
+				$filter_query_vars = explode('.', $query_filter);
 				$taxonomy_slug = $filter_query_vars[0];
 				$term_slug = $filter_query_vars[1];
 

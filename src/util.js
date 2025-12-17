@@ -9,7 +9,7 @@ export function getQueryUrl( ref, value = null ) {
 	} else {
 		currentUrl.searchParams.set(
 			'query-filter-' + queryId,
-			taxonomy + '_' + term
+			taxonomy + '.' + term
 		);
 	}
 

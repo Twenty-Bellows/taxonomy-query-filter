@@ -1,7 +1,7 @@
 === Taxonomy Query Filter ===
 Contributors:      twentybellows, pbking, stevepfisterer, thezenith
 Tags:              block
-Tested up to:      6.8
+Tested up to:      6.9
 Stable tag:        1.0.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -48,6 +48,9 @@ Yes! The block outputs standard markup and class names you can target with CSS.
 == Screenshots ==
 
 == Changelog ==
+
+= 1.0.1 =
+* Changed taxonomy/term separator to . so that -'s and _'s can both be used in slugs
 
 = 1.0.0 =
 * Initial release with category filtering support.

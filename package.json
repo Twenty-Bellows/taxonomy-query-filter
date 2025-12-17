@@ -1,6 +1,6 @@
 {
 	"name": "taxonomy-query-filter",
-	"version": "0.1.0",
+	"version": "1.0.1",
 	"description": "Add taxonomy filters for Query Loop",
 	"author": "pbking",
 	"license": "GPL-2.0-or-later",
