@@ -5,9 +5,13 @@ A WordPress block that adds interactive taxonomy filtering capabilities to Query
 ## Features
 
 - **Interactive Filtering**: Add dropdown filters for any taxonomy (categories, tags, custom taxonomies)
-- **No Page Reloads**: Uses WordPress Interactivity API for smooth, instant filtering
+- **Flexible Loading**: Works with AJAX or page reload depending on your Query Loop settings
+- **URL Query Parameters**: Updates the URL for shareable and bookmarkable filtered views
 - **Block Editor Integration**: Seamlessly integrates with the WordPress Query Loop block
+- **Full Site Editing Ready**: Built specifically for FSE and block-based themes
+- **Preserves Query Settings**: Maintains pagination and other Query Loop configurations
 - **Responsive**: Works on all devices and screen sizes
+- **Dropdown Enhancer Compatible**: Works with dropdown libraries like Select2
 - **Developer Friendly**: Clean, extendable code with hooks and filters
 
 ## Requirements
@@ -83,13 +87,13 @@ Here's a simple example that creates a filterable post list:
 
 The filter works with any registered taxonomy. Simply select your custom taxonomy from the block settings.
 
-#### Multiple Filters
-
-You can add multiple Taxonomy Query Filter blocks within the same Query Loop to filter by different taxonomies simultaneously.
-
 #### Styling
 
 The filter uses standard WordPress classes and can be styled with CSS. The main wrapper has the class `.wp-block-twentybellows-taxonomy-query-filter`.
+
+#### Dropdown Enhancement
+
+The plugin works seamlessly with dropdown enhancement libraries like Select2 for advanced styling and search functionality.
 
 ### Plugin Testing
 

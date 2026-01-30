@@ -23,30 +23,69 @@ foreach ($categories as $category) {
 }
 
 // Create categories
-$cat_alpha = wp_create_category('Alpha');
-$cat_beta = wp_create_category('Beta');
-$cat_gamma = wp_create_category('Gamma');
+$cat_breakfast = wp_create_category('Breakfast');
+$cat_lunch = wp_create_category('Lunch');
+$cat_dinner = wp_create_category('Dinner');
+$cat_dessert = wp_create_category('Dessert');
 
-// Create posts
+// Create posts - Breakfast
 wp_insert_post([
-	'post_title' => 'First Post',
-	'post_content' => 'This is the first post.',
+	'post_title' => 'Fluffy Pancakes',
+	'post_content' => 'A classic breakfast favorite with maple syrup.',
 	'post_status' => 'publish',
-	'post_category' => [$cat_alpha]
+	'post_category' => [$cat_breakfast]
 ]);
 
 wp_insert_post([
-	'post_title' => 'Second Post',
-	'post_content' => 'This is the second post.',
+	'post_title' => 'Avocado Toast',
+	'post_content' => 'Healthy and delicious smashed avocado on sourdough.',
 	'post_status' => 'publish',
-	'post_category' => [$cat_beta]
+	'post_category' => [$cat_breakfast]
+]);
+
+// Create posts - Lunch
+wp_insert_post([
+	'post_title' => 'Caesar Salad',
+	'post_content' => 'Fresh romaine with homemade Caesar dressing.',
+	'post_status' => 'publish',
+	'post_category' => [$cat_lunch]
 ]);
 
 wp_insert_post([
-	'post_title' => 'Third Post',
-	'post_content' => 'This is the third post.',
+	'post_title' => 'Chicken Sandwich',
+	'post_content' => 'Grilled chicken with fresh vegetables on ciabatta.',
 	'post_status' => 'publish',
-	'post_category' => [$cat_gamma]
+	'post_category' => [$cat_lunch]
+]);
+
+// Create posts - Dinner
+wp_insert_post([
+	'post_title' => 'Spaghetti Carbonara',
+	'post_content' => 'Classic Italian pasta with creamy egg sauce.',
+	'post_status' => 'publish',
+	'post_category' => [$cat_dinner]
+]);
+
+wp_insert_post([
+	'post_title' => 'Grilled Salmon',
+	'post_content' => 'Fresh Atlantic salmon with lemon and herbs.',
+	'post_status' => 'publish',
+	'post_category' => [$cat_dinner]
+]);
+
+// Create posts - Dessert
+wp_insert_post([
+	'post_title' => 'Chocolate Chip Cookies',
+	'post_content' => 'Warm, gooey cookies loaded with chocolate chips.',
+	'post_status' => 'publish',
+	'post_category' => [$cat_dessert]
+]);
+
+wp_insert_post([
+	'post_title' => 'New York Cheesecake',
+	'post_content' => 'Rich and creamy classic cheesecake.',
+	'post_status' => 'publish',
+	'post_category' => [$cat_dessert]
 ]);
 
 // Create page with block markup
@@ -60,7 +99,7 @@ $page_markup = '<!-- wp:query {"queryId":23,"query":{"perPage":10,"pages":0,"off
 <!-- /wp:query -->';
 
 wp_insert_post([
-	'post_title' => 'Query Filter Page',
+	'post_title' => 'Recipe Collection',
 	'post_content' => $page_markup,
 	'post_status' => 'publish',
 	'post_type' => 'page'
