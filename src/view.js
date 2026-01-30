@@ -20,14 +20,7 @@ const queryFilterStore = store( 'twentybellows/taxonomy-query-filter', {
 				'data-query-filter-enhanced-pagination'
 			);
 
-			const selectedValue = ref.value;
-
 			yield* navigate( getQueryUrl( ref ), enhancedPagination );
-
-			if ( enhancedPagination ) {
-				ref.value = selectedValue;
-				ref.checked = true;
-			}
 		},
 		prefetch: function* ( url ) {
 			const { actions } = yield import(
@@ -40,6 +33,25 @@ const queryFilterStore = store( 'twentybellows/taxonomy-query-filter', {
 		init: function () {
 			const { ref } = getElement();
 			const prefetch = ref.hasAttribute( 'data-query-filter-prefetch' );
+
+			// Ensure select dropdowns reflect the current URL parameter
+			if ( ref.tagName === 'SELECT' ) {
+				const queryId = ref.getAttribute( 'data-query-filter-query-id' );
+				const taxonomy = ref.getAttribute( 'data-query-filter-taxonomy' );
+				const urlParams = new URLSearchParams( window.location.search );
+				const filterParam = urlParams.get( 'query-filter-' + queryId );
+
+				if ( filterParam ) {
+					// Extract term slug from "taxonomy.term" format
+					const parts = filterParam.split( '.' );
+					if ( parts.length === 2 && parts[ 0 ] === taxonomy ) {
+						ref.value = parts[ 1 ];
+					}
+				} else {
+					// No filter set, select "all"
+					ref.value = 'all';
+				}
+			}
 
 			if ( prefetch ) {
 				if ( ref.options ) {
