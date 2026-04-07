@@ -20,7 +20,32 @@ const queryFilterStore = store( 'twentybellows/taxonomy-query-filter', {
 				'data-query-filter-enhanced-pagination'
 			);
 
+			// Capture before yielding — ref may be stale after DOM patching
+			const isRadio = ref.type === 'radio';
+			const queryId = ref.getAttribute( 'data-query-filter-query-id' );
+			const selectedValue = ref.value;
+
 			yield* navigate( getQueryUrl( ref ), enhancedPagination );
+
+			// After navigation the router may have patched checked onto the new
+			// radio without removing it from the old one, leaving multiple radios
+			// checked. Force the correct state on all radios in this group.
+			if ( isRadio ) {
+				document
+					.querySelectorAll(
+						`input[type="radio"][data-query-filter-query-id="${ queryId }"]`
+					)
+					.forEach( ( input ) => {
+						input.checked = input.value === selectedValue;
+						const label = input.nextElementSibling;
+						if ( label?.tagName === 'LABEL' ) {
+							label.classList.toggle(
+								'selected',
+								input.value === selectedValue
+							);
+						}
+					} );
+			}
 		},
 		prefetch: function* ( url ) {
 			const { actions } = yield import(

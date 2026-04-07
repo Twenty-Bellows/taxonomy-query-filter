@@ -134,6 +134,14 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			$label->next_tag();
 			$label->set_attribute('for', $item_id);
 
+			$is_checked = isset($_GET['query-filter-' . $query_id]) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				? $_GET['query-filter-' . $query_id] == $taxonomy_slug . '.' . $slug // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				: $slug === 'all';
+
+			if ($is_checked) {
+				$label->set_attribute('class', 'selected');
+			}
+
 			return $input->get_updated_html() . $label->get_updated_html();
 		}
 
