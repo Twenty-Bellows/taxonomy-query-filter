@@ -57,14 +57,20 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 
 		private function get_query_filter_select($query_id, $taxonomy, $terms, $data_attributes)
 		{
-			$options = '';
+			$selected_term = null;
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if (isset($_GET['query-filter-' . $query_id])) {
+				$selected_term = $_GET['query-filter-' . $query_id]; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			}
 
 			// All Items Option
 			$option = new WP_HTML_Tag_Processor('<option>' . $taxonomy->labels->all_items . '</option>');
 			$option->next_tag();
 			$option->set_attribute('value', 'all');
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy->name . '_all') {
+
+			$options = '';
+
+			if ( null === $selected_term ) {
 				$option->set_attribute('selected', true);
 			}
 			$options .= $option->get_updated_html();
@@ -74,8 +80,7 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 				$option = new WP_HTML_Tag_Processor('<option>' . $term->name . '</option>');
 				$option->next_tag();
 				$option->set_attribute('value', $term->slug);
-				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy->name . '.' . $term->slug) {
+				if ($selected_term === $term->slug) {
 					$option->set_attribute('selected', true);
 				}
 				$options .= $option->get_updated_html();
@@ -120,13 +125,19 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 				$input->set_attribute($key, $value);
 			}
 
+			$selected_term = null;
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if (isset($_GET['query-filter-' . $query_id]) && $_GET['query-filter-' . $query_id] == $taxonomy_slug . '.' . $slug) {
+			if (isset($_GET['query-filter-' . $query_id])) {
+				$selected_term = $_GET['query-filter-' . $query_id]; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			}
+
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( $selected_term === $slug) {
 				$input->set_attribute('checked', true);
 			}
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if (! isset($_GET['query-filter-' . $query_id]) && $slug === 'all') {
+			if ( null === $selected_term && $slug === 'all') {
 				$input->set_attribute('checked', true);
 			}
 
@@ -134,8 +145,8 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			$label->next_tag();
 			$label->set_attribute('for', $item_id);
 
-			$is_checked = isset($_GET['query-filter-' . $query_id]) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				? $_GET['query-filter-' . $query_id] == $taxonomy_slug . '.' . $slug // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$is_checked = $selected_term
+				? $selected_term === $taxonomy_slug . '.' . $slug
 				: $slug === 'all';
 
 			if ($is_checked) {
@@ -143,6 +154,24 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 			}
 
 			return $input->get_updated_html() . $label->get_updated_html();
+		}
+
+		private static function find_inner_block($inner_blocks, $block_name)
+		{
+			foreach ($inner_blocks as $block) {
+				if ($block['blockName'] === $block_name) {
+					return $block;
+				}
+
+				if (!empty($block['innerBlocks'])) {
+					$result = self::find_inner_block($block['innerBlocks'], $block_name);
+					if ($result) {
+						return $result;
+					}
+				}
+			}
+
+			return null;
 		}
 
 		public static function pre_render_query_block($pre_render, $parsed_block)
@@ -155,46 +184,32 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 				return $pre_render;
 			}
 
-			$query_id = $parsed_block['attrs']['queryId'];
-			$query_filters = array();
+			// if one of the inner blocks is a query filter, we need to modify the query args
+			$query_filter_block = self::find_inner_block($parsed_block['innerBlocks'], 'twentybellows/taxonomy-query-filter');
 
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			foreach (array_keys($_GET) as $key) {
-				if (strpos($key, 'query-filter-' . $query_id) === 0) {
-					// add a sanitized key
-					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					if (isset($_GET[$key])) {
-						// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-						$query_filters[] = sanitize_text_field(wp_unslash($_GET[$key]));
-					}
-				}
-			}
-
-			if (empty($query_filters)) {
+			if (! $query_filter_block) {
 				return $pre_render;
 			}
 
-			$query_filter = array_values($query_filters)[0];
+			$query_id = $parsed_block['attrs']['queryId'];
+			$taxonomy_slug = $query_filter_block['attrs']['taxonomy'] ?? null;
+			$term_slug = $_GET['query-filter-' . $query_id] ?? null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
+			add_filter('query_loop_block_query_vars', function ($query) use ($term_slug, $taxonomy_slug) {
 
-			add_filter('query_loop_block_query_vars', function ($query) use ($query_filter) {
-
-				$filter_query_vars = explode('.', $query_filter);
-				$taxonomy_slug = $filter_query_vars[0];
-				$term_slug = $filter_query_vars[1];
-
-				if ($term_slug === 'all') {
-					return $query;
+				if ($term_slug === 'all' || $term_slug === null) {
+					$query['tax_query'] =[[
+						'taxonomy' => $taxonomy_slug,
+						'operator' => 'EXISTS',
+					]];
 				}
-
-				$tax_query = array();
-				$tax_query[] = array(
-					'taxonomy' => $taxonomy_slug,
-					'field'    => 'slug',
-					'terms'    => $term_slug,
-				);
-				$query['tax_query'] = $tax_query;
-
+				else {
+					$query['tax_query'] = [[
+						'taxonomy' => $taxonomy_slug,
+						'field'    => 'slug',
+						'terms'    => $term_slug,
+					]];
+				}
 				return $query;
 			});
 

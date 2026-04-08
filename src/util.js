@@ -1,7 +1,6 @@
 export function getQueryUrl( ref, value = null ) {
 	const queryId = ref.getAttribute( 'data-query-filter-query-id' ) || '';
 	const term = value || ref.value;
-	const taxonomy = ref.getAttribute( 'data-query-filter-taxonomy' ) || '';
 	const currentUrl = new URL( window.location.href );
 
 	if ( term === 'all' ) {
@@ -9,7 +8,7 @@ export function getQueryUrl( ref, value = null ) {
 	} else {
 		currentUrl.searchParams.set(
 			'query-filter-' + queryId,
-			taxonomy + '.' + term
+			term
 		);
 	}
 
