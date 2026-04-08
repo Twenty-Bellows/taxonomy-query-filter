@@ -2,7 +2,7 @@
 Contributors:      twentybellows, pbking, stevepfisterer, thezenith
 Tags:              taxonomy, filter, query-loop, category, tag, archive, fse, full-site-editing, block
 Tested up to:      6.9
-Stable tag:        1.0.3
+Stable tag:        1.0.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,10 @@ No coding required! Simply add the block to your Query Loop and select your taxo
 3. Filtering in action on a live site
 
 == Changelog ==
+
+= 1.0.4 =
+* Fixed bug where items without any terms were included in the 'all' designation.
+* streamlined the query string used (included only the term)
 
 = 1.0.3 =
 * Fixed a bug where radio buttons didn't reflect selected item in some situations
