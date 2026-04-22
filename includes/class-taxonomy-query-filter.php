@@ -197,18 +197,20 @@ if (!class_exists('Twenty_Bellows_Query_Filter')) {
 
 			add_filter('query_loop_block_query_vars', function ($query) use ($term_slug, $taxonomy_slug) {
 
+				$query['tax_query'] = $query['tax_query'] ?? [];
+
 				if ($term_slug === 'all' || $term_slug === null) {
-					$query['tax_query'] =[[
+					$query['tax_query'][] = [
 						'taxonomy' => $taxonomy_slug,
 						'operator' => 'EXISTS',
-					]];
+					];
 				}
 				else {
-					$query['tax_query'] = [[
+					$query['tax_query'][] = [
 						'taxonomy' => $taxonomy_slug,
 						'field'    => 'slug',
 						'terms'    => $term_slug,
-					]];
+					];
 				}
 				return $query;
 			});
